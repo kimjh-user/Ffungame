@@ -516,36 +516,36 @@ const STAGES = [
     obInterval:112,    // 20→16개 수준으로 완화
     coinInterval:40
   },
-  // Lv5 — 음식 55개, 장애물 27개, 제한 13초
+  // Lv5 — 음식 55개, 장애물 19개(완화), 제한 19초(완화, 자연주행 ~27.6초)
   { lv:5, name:"무지개 디저트 공원", icon:"🌈",
     roadColor:"#FFF0C0", lineColor:"#FFD060",
     skyTop:"#FFF0D0", skyBot:"#FFFAE8", sideColor:"#FFE8B0",
-    goalDist:1884, baseSpd:3.8, timeLimit:13,
-    obInterval:67,
+    goalDist:1884, baseSpd:3.8, timeLimit:19,
+    obInterval:95,     // 27→19개 수준으로 완화
     coinInterval:33
   },
-  // Lv6 — 음식 65개, 장애물 35개, 제한 12초
+  // Lv6 — 음식 65개, 장애물 24개(완화), 제한 19초(완화, 자연주행 ~27.6초)
   { lv:6, name:"구름 위 행복 식당", icon:"⭐",
     roadColor:"#FFE8F0", lineColor:"#FFB8D8",
     skyTop:"#FFD8EC", skyBot:"#FFF0F8", sideColor:"#FFCCE8",
-    goalDist:2282, baseSpd:4.6, timeLimit:12,
-    obInterval:51,
+    goalDist:2282, baseSpd:4.6, timeLimit:19,
+    obInterval:75,     // 35→24개 수준으로 완화
     coinInterval:28
   },
-  // Lv7 — 음식 75개, 장애물 45개, 제한 11초
+  // Lv7 — 음식 75개, 장애물 31개(완화), 제한 19초(완화, 자연주행 ~27.5초)
   { lv:7, name:"용감한 야간 드라이브", icon:"🌙",
     roadColor:"#D8D0F8", lineColor:"#9080E8",
     skyTop:"#C8C0F0", skyBot:"#E0D8FF", sideColor:"#C0B8E8",
-    goalDist:2728, baseSpd:5.5, timeLimit:11,
-    obInterval:40,
+    goalDist:2728, baseSpd:5.5, timeLimit:19,
+    obInterval:58,     // 45→31개 수준으로 완화
     coinInterval:24
   },
-  // Lv8 — 음식 90개, 장애물 60개, 제한 10초
+  // Lv8 — 음식 90개, 장애물 41개(완화), 제한 19초(완화, 자연주행 ~27.7초)
   { lv:8, name:"번개 스피드 챔피언!", icon:"⚡",
     roadColor:"#FFE0B8", lineColor:"#FF9A40",
     skyTop:"#FFD8C0", skyBot:"#FFEEDD", sideColor:"#FFD0B0",
-    goalDist:3226, baseSpd:6.5, timeLimit:10,
-    obInterval:30,
+    goalDist:3226, baseSpd:6.5, timeLimit:19,
+    obInterval:44,     // 60→41개 수준으로 완화
     coinInterval:20
   },
 ];
