@@ -472,8 +472,8 @@ const CHEER_TIMEOUT = [
   { icon:'⌛', title:'아깝게 늦었어!',  msg:'부스터 타이밍을 노려서 다시 도전해봐! 🔥' },
 ];
 
-// 최고 달성 레벨 (로컬 저장)
-let maxUnlocked = parseInt(localStorage.getItem('maxLevel')||'0');
+// 진행도는 저장하지 않음 — 다른 기기 접속/새로고침/게임 중단 시 항상 레벨1부터 시작
+let maxUnlocked = 0;
 
 // ── 스폰 간격 계산 ──────────────────────────────────
 // 목표: 약 30초 완주 (60fps → 1800프레임) — 거리 기준은 유지
@@ -703,13 +703,36 @@ const Game = (function(){
     dist+=eff*dt*0.3;
 
     // 장애물 스폰 — obInterval 고정 간격 + 약간의 랜덤
+    // 오류 수정: 항상 완전 랜덤 차선이면 한 차선에 고정 + 부스터만 써도
+    // 운으로 장애물을 거의 안 만나고 클리어가 되는 문제가 있었음.
+    // → 일정 확률로 "플레이어 현재 차선"을 반드시 포함해서 스폰하고,
+    //   가끔은 여러 차선을 동시에 막아 안전지대가 없도록 한다.
     spawnT-=dt;
     if(spawnT<=0){
       spawnT = st.obInterval * (0.85 + Math.random()*0.3);
-      const l=Math.floor(Math.random()*LANES);
       const sz=Math.round(laneW*0.55);
-      const el=makeEl(OBS[Math.floor(Math.random()*OBS.length)],'obstacle',sz);
-      obstacles.push({lane:l,y:-sz,x:laneX(l),hit:false,el,sz});
+
+      // 70% 확률로 플레이어가 현재 있는 차선을 포함해서 장애물 배치
+      const targetPlayerLane = Math.random() < 0.7;
+      let lanesToSpawn = [];
+
+      if(targetPlayerLane){
+        lanesToSpawn.push(lane); // 지금 서 있는 차선에 장애물 → 반드시 회피해야 함
+      } else {
+        lanesToSpawn.push(Math.floor(Math.random()*LANES));
+      }
+
+      // 레벨이 올라갈수록 동시에 2차선을 막는 경우도 늘어남 (Lv1: 10% → Lv8: 30%)
+      const multiLaneChance = 0.10 + (st.lv-1)*0.03;
+      if(Math.random() < multiLaneChance){
+        let extra = Math.floor(Math.random()*LANES);
+        if(!lanesToSpawn.includes(extra)) lanesToSpawn.push(extra);
+      }
+
+      lanesToSpawn.forEach(l=>{
+        const el=makeEl(OBS[Math.floor(Math.random()*OBS.length)],'obstacle',sz);
+        obstacles.push({lane:l,y:-sz,x:laneX(l),hit:false,el,sz});
+      });
     }
     // 음식 스폰 — coinInterval 고정 간격 + 약간의 랜덤
     coinT-=dt;
@@ -1184,7 +1207,7 @@ const UI = (function(){
 
     if(win && idx>=maxUnlocked){
       maxUnlocked=Math.min(STAGES.length-1, idx+1);
-      localStorage.setItem('maxLevel', maxUnlocked);
+      // localStorage 저장 안 함 — 현재 세션(이 브라우저 탭)에서만 레벨 해금 유지
     }
 
     // 문구 랜덤 선택 (시간초과면 전용 문구 풀 사용)
